@@ -7,7 +7,7 @@ import useProducts from '../../hooks/useProducts';
 import useForm from '../../hooks/useForm';
 import useRecommendations from '../../hooks/useRecommendations';
 
-function Form() {
+function Form({ setRecommendations }) {
   const { preferences, features, products } = useProducts();
   const { formData, handleChange } = useForm({
     selectedPreferences: [],
@@ -21,9 +21,7 @@ function Form() {
     e.preventDefault();
     const dataRecommendations = getRecommendations(formData);
 
-    /**
-     * Defina aqui a lógica para atualizar as recomendações e passar para a lista de recomendações
-     */
+    setRecommendations(dataRecommendations);
   };
 
   return (

@@ -14,33 +14,55 @@ const getRecommendations = (
   formData = { selectedPreferences: [], selectedFeatures: [] },
   products
 ) => {
-  /**
-   * Crie aqui a lógica para retornar os produtos recomendados.
-   */
-
-  console.log(formData)
-
-  const selectedPreferencesNormalized = formData.selectedPreferences.map(
-    (preference) => normalizeText(preference)
-  );
-  const selectedFeaturesNormalized = formData.selectedFeatures.map((feature) =>
-    normalizeText(feature)
-  );
+  const selectedPreferencesNormalized = formData.selectedPreferences
+    ? formData.selectedPreferences.map((preference) =>
+        normalizeText(preference)
+      )
+    : [];
+  const selectedFeaturesNormalized = formData.selectedFeatures
+    ? formData.selectedFeatures.map((feature) => normalizeText(feature))
+    : [];
 
   const selectedProducts = products.filter((product) => {
     const matchPreference =
-      !selectedPreferencesNormalized ||
+      selectedPreferencesNormalized &&
       hasMatch(product.preferences, selectedPreferencesNormalized);
 
     const matchFeature =
-      !selectedFeaturesNormalized ||
+      selectedFeaturesNormalized &&
       hasMatch(product.features, selectedFeaturesNormalized);
 
     return matchFeature || matchPreference;
   });
 
-    return selectedProducts;
+  if (formData.selectedRecommendationType === 'SingleProduct') {
+    const filteredBestProduct =
+      selectedProducts.length > 0
+        ? selectedProducts.reduce((bestProduct, currentProducts) => {
+            const valueCurrent = currentProducts.features.filter((feature) =>
+              formData.selectedFeatures
+                ? formData.selectedFeatures.includes(feature)
+                : false
+            ).length;
 
+            const bestValue = bestProduct
+              ? bestProduct.features.filter((feature) =>
+                  formData.selectedFeatures
+                    ? formData.selectedFeatures.includes(feature)
+                    : false
+                ).length
+              : 0;
+
+            return valueCurrent >= bestValue ? currentProducts : bestProduct;
+          }, null)
+        : [];
+
+    return filteredBestProduct
+      ? [filteredBestProduct]
+      : [selectedProducts[selectedProducts.length - 1]];
+  }
+
+  return selectedProducts;
 };
 
 export default { getRecommendations };
