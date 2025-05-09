@@ -1,11 +1,11 @@
-// Form.js
-
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Preferences, Features, RecommendationType } from './Fields';
 import { SubmitButton } from './SubmitButton';
 import useProducts from '../../hooks/useProducts';
 import useForm from '../../hooks/useForm';
 import useRecommendations from '../../hooks/useRecommendations';
+import { validationForm } from '../../utils/validationForm';
+import { ErrorMessages } from './ErrorMessages';
 
 function Form({ setRecommendations }) {
   const { preferences, features, products } = useProducts();
@@ -14,21 +14,45 @@ function Form({ setRecommendations }) {
     selectedFeatures: [],
     selectedRecommendationType: '',
   });
-
-  const { getRecommendations, recommendations } = useRecommendations(products);
+  const [messagesInvalidForm, setMessagesInvalidForm] = useState([]);
+  const { getRecommendations } = useRecommendations(products);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataRecommendations = getRecommendations(formData);
 
-    setRecommendations(dataRecommendations);
+    const validatedForm = validationForm(formData);
+
+    if (validatedForm?.isValid) {
+      const dataRecommendations = getRecommendations(formData);
+      setRecommendations(dataRecommendations);
+
+      return;
+    }
+
+    setMessagesInvalidForm(validatedForm?.message);
   };
+
+  useEffect(()=>{
+      let timeout = '';
+      if(messagesInvalidForm?.length > 0){
+
+        timeout = setTimeout(() => {
+          setMessagesInvalidForm([])
+        }, 3000)
+      }
+
+      return () => clearTimeout(timeout)
+  }, [messagesInvalidForm])
 
   return (
     <form
       className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md"
       onSubmit={handleSubmit}
     >
+      {messagesInvalidForm?.length > 0 && (
+        <ErrorMessages messagesInvalidForm={messagesInvalidForm} />
+      )}
+
       <Preferences
         preferences={preferences}
         onPreferenceChange={(selected) =>

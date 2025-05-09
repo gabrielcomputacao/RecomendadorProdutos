@@ -77,9 +77,8 @@ describe('recommendationService', () => {
       mockProducts
     );
 
-    console.log(recommendations)
-
     expect(recommendations).toHaveLength(1);
     expect(recommendations[0].name).toBe('RD Conversas');
   });
+  
 });
