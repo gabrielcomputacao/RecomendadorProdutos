@@ -46,7 +46,7 @@ function Form({ setRecommendations }) {
 
   return (
     <form
-      className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md"
+      className="md:max-w-md md:mx-auto p-4 bg-white rounded-lg shadow-md"
       onSubmit={handleSubmit}
     >
       {messagesInvalidForm?.length > 0 && (
