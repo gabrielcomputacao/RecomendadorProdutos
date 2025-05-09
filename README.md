@@ -97,6 +97,14 @@ Certifique-se de que todos os critérios de aceite são atendidos durante o dese
 
 Desenvolvido por Gabriel Henrique
 
+### Pontos Focados
+
+- Lógica de recomendação de produtos simples e menos complexa
+- Componentização
+- Responsividade
+- Váriaveis com nomes intuitivos
+- Testes com acrescimo de válidação do formulário
+
 ## Licença
 
 Este projeto está licenciado sob a [Licença MIT](LICENSE).
