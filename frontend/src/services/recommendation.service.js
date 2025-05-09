@@ -25,11 +25,11 @@ const getRecommendations = (
 
   const selectedProducts = products.filter((product) => {
     const matchPreference =
-      selectedPreferencesNormalized &&
+      selectedPreferencesNormalized.length > 0 &&
       hasMatch(product.preferences, selectedPreferencesNormalized);
 
     const matchFeature =
-      selectedFeaturesNormalized &&
+      selectedFeaturesNormalized.length > 0 &&
       hasMatch(product.features, selectedFeaturesNormalized);
 
     return matchFeature || matchPreference;
@@ -57,7 +57,7 @@ const getRecommendations = (
           }, null)
         : [];
 
-    return filteredBestProduct
+    return filteredBestProduct.length > 0
       ? [filteredBestProduct]
       : [selectedProducts[selectedProducts.length - 1]];
   }
